@@ -1,0 +1,32 @@
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+import binascii
+
+# Key and message
+key = b'0123456789ABCDEF'  # 16 bytes for AES-128
+message = b'Sensitive Information'
+
+# Create an AES cipher object
+cipher = AES.new(key, AES.MODE_CBC)
+
+# Pad the message to be multiple of block size
+padded_message = pad(message, AES.block_size)
+
+# Encrypt the message
+ciphertext = cipher.encrypt(padded_message)
+
+# Store the initialization vector (IV)
+iv = cipher.iv
+
+# Display the ciphertext in hexadecimal format
+print("Ciphertext (hex):", binascii.hexlify(iv + ciphertext).decode())
+
+# Decrypt the message
+cipher_decrypt = AES.new(key, AES.MODE_CBC, iv)
+decrypted_padded_message = cipher_decrypt.decrypt(ciphertext)
+
+# Unpad the decrypted message
+decrypted_message = unpad(decrypted_padded_message, AES.block_size)
+
+# Display the decrypted message
+print("Decrypted message:", decrypted_message.decode())
